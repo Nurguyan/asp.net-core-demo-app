@@ -20,6 +20,7 @@ namespace NorthwindContextLib
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>()
             .Property(c => c.CategoryName)
             .IsRequired()
@@ -28,6 +29,7 @@ namespace NorthwindContextLib
             modelBuilder.Entity<Category>()
             .HasMany(c => c.Products)
             .WithOne(p => p.Category);
+
             modelBuilder.Entity<Customer>()
             .Property(c => c.CustomerID)
             .IsRequired()
@@ -42,6 +44,8 @@ namespace NorthwindContextLib
             modelBuilder.Entity<Customer>()
             .Property(c => c.Country)
             .HasMaxLength(15);
+            
+
             modelBuilder.Entity<Employee>()
             .Property(c => c.LastName)
             .IsRequired()
@@ -53,6 +57,7 @@ namespace NorthwindContextLib
             modelBuilder.Entity<Employee>()
             .Property(c => c.Country)
             .HasMaxLength(15);
+
             modelBuilder.Entity<Product>()
             .Property(c => c.ProductName)
            .IsRequired()
@@ -63,9 +68,10 @@ namespace NorthwindContextLib
             modelBuilder.Entity<Product>()
             .HasOne(p => p.Supplier)
             .WithMany(s => s.Products);
+
             modelBuilder.Entity<OrderDetail>()
             .ToTable("Order Details");
-            // определить первый ключ в нескольких столбцах
+            // определить первичный ключ в нескольких столбцах
             // для таблицы Order Details
             modelBuilder.Entity<OrderDetail>()
             .HasKey(od => new { od.OrderID, od.ProductID });
@@ -76,6 +82,11 @@ namespace NorthwindContextLib
             modelBuilder.Entity<Supplier>()
             .HasMany(s => s.Products)
             .WithOne(p => p.Supplier);
+
+            modelBuilder.Entity<Order>()
+            .HasOne(o => o.Shipper)
+            .WithMany(s => s.Orders)
+            .HasForeignKey(s => s.OrderID);
         }
     }
 }
